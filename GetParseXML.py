@@ -14,14 +14,13 @@ import shutil
 
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 gzips = [f for f in listdir(xmLpath) if isfile(join(xmLpath, f)) and f[-3:] == ".gz"]
-
 # get our big file by chunks to process it serially:
 # name space for author & paper:
 names_a = {"LastName": "last_name", "ForeName": "first_name", "Initials": "initials", "ORCID": "orcid", "Affiliation": "af_place", "Country": "af_country"}
 names_p = {"ArticleTitle": "title", "AbstractText": "abstract", "ISSN": "issn", "Title": "journal"}
 months = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
-print "start unzip and loading all gzip files one by one: " + str(datetime.now())
-k = 0
+print str(datetime.now())[:-7] + " : start unzip and loading all gzip files one by one"
+nn = 0
 for gz in sorted(gzips):
     xmL = xmLpath + gz
     with gzip.open(xmL, 'rb') as f:
@@ -29,16 +28,13 @@ for gz in sorted(gzips):
         with open(xmL, "w") as ff:
             ff.write(f.read())
     data = {}
-    names = []
-    pdate = []
-    a_data = {}
-    af_data = {}
-    p_data = {}
-    ca_data = {}
     ca_list = []
     kw_list = []
+    a_data = {}
+    p_data = {}
+    ca_data = {}
     n = 0   # line number to catch parcing/loading bugs
-    print "start loading " + xmL + " : " + str(datetime.now())
+    print str(datetime.now())[:-7] + " : starting to load " + xmL
     for event, elem in etree.iterparse(xmL, events=('start', 'end', 'start-ns', 'end-ns')):
         childs = {"Year": "1000", "Month": "1", "Day": "1"}
         memo = {}
@@ -105,17 +101,14 @@ for gz in sorted(gzips):
             data["coauthors"] = ca_list
             data["keywords"] = kw_list
             DBcall("papers", n).loadData([data])
-            # for k, v in data.iteritems():
-            #     print k, v
-            af_data = {}
             p_data = {}
             data = {}
             ca_list = []
             kw_list = []
         n += 1
-    k += 1
-    kn = str(k)
-    print "end loading " + kn + "th " + xmL + " : " + str(datetime.now())
-    with open(xmL, 'rb') as f_in, gzip.open(xmL + '.gz', 'wb') as f_out:
-        shutil.copyfileobj(f_in, f_out)
+    nn += 1
+    print str(datetime.now())[:-7] + " : finished loading " + str(nn) + "th " + xmL
+    # with open(xmL, 'rb') as f_in, gzip.open(xmL + '.gz', 'wb') as f_out:
+    #     shutil.copyfileobj(f_in, f_out)
     os.unlink(xmL)
+print str(datetime.now())[:-7] + " : done"
