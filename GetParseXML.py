@@ -114,7 +114,8 @@ for gz in sorted(gzips):
             kw_list = []
         n += 1
     k += 1
-    print "end loading " + k + "th " + xmL + " : " + str(datetime.now())
+    kn = str(k)
+    print "end loading " + kn + "th " + xmL + " : " + str(datetime.now())
     with open(xmL, 'rb') as f_in, gzip.open(xmL + '.gz', 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
     os.unlink(xmL)
