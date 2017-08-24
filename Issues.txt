@@ -1,0 +1,5 @@
+1.
+NCBI do not use Authors IDs, https://www.nlm.nih.gov/pubs/techbull/nd10/nd10_pm_author_id.html
+two ways of author ORCID id record:
+<Identifier Source="ORCID">http://orcid.org/0000-0002-3175-9795</Identifier>
+<Identifier Source="ORCID">0000-0001-8487-647X</Identifier>
