@@ -14,6 +14,7 @@ import shutil
 
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 gzips = [f for f in listdir(xmLpath) if isfile(join(xmLpath, f)) and f[-3:] == ".gz"]
+
 # get our big file by chunks to process it serially:
 # name space for author & paper:
 names_a = {"LastName": "last_name", "ForeName": "first_name", "Initials": "initials", "ORCID": "orcid", "Affiliation": "af_place", "Country": "af_country"}
@@ -26,7 +27,11 @@ for gz in sorted(gzips):
     with gzip.open(xmL, 'rb') as f:
         xmL = xmL[:-3]
         with open(xmL, "w") as ff:
-            ff.write(f.read())
+            try:
+                ff.write(f.read())
+            except Exception, e:
+                print "failed to unpack " + gz
+                continue
     data = {}
     ca_list = []
     kw_list = []
