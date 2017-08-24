@@ -21,9 +21,9 @@ names_a = {"LastName": "last_name", "ForeName": "first_name", "Initials": "initi
 names_p = {"ArticleTitle": "title", "AbstractText": "abstract", "ISSN": "issn", "Title": "journal"}
 months = {"Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4, "May": 5, "Jun": 6, "Jul": 7, "Aug": 8, "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
 print "start unzip and loading all gzip files one by one: " + str(datetime.now())
+k = 0
 for gz in sorted(gzips):
     xmL = xmLpath + gz
-    print xmL
     with gzip.open(xmL, 'rb') as f:
         xmL = xmL[:-3]
         with open(xmL, "w") as ff:
@@ -86,9 +86,9 @@ for gz in sorted(gzips):
                     if re.search('http://orcid.org', elem.text):
                         a_data["orcid"] = elem.text
                     elif re.search('-', elem.text) and not re.search('http://orcid.org', elem.text):
-                        orcid = 'http://orcid.org/' + elem.text
+                        a_data["orcid"] = 'http://orcid.org/' + elem.text
                     else:
-                        orcid = 'http://orcid.org/' + elem.text[0:4] + "-" + elem.text[4:8] + "-" + elem.text[8:12] + "-" + elem.text[12:16]
+                        a_data["orcid"] = 'http://orcid.org/' + elem.text[0:4] + "-" + elem.text[4:8] + "-" + elem.text[8:12] + "-" + elem.text[12:16]
                 p_data["num_of_authors"] = len(ca_list)
                 data["paper"] = p_data
             if elem.tag == "Keyword":
@@ -113,7 +113,8 @@ for gz in sorted(gzips):
             ca_list = []
             kw_list = []
         n += 1
-    print "end loading " + xmL + " : " + str(datetime.now())
+    k += 1
+    print "end loading " + k + "th " + xmL + " : " + str(datetime.now())
     with open(xmL, 'rb') as f_in, gzip.open(xmL + '.gz', 'wb') as f_out:
         shutil.copyfileobj(f_in, f_out)
     os.unlink(xmL)
