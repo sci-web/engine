@@ -1,11 +1,16 @@
 {
 "papers" : {
-    "author" : {"first_name":"", "middle_name":"", "last_name":"", "initials":"", "auth_gen_id":"", "orcid":"",
-    "af_place":"", "af_country":"", "date_start":"", "date_end":"", "email":"", "position" : 1},
-    "paper" : [{
-    "title":"", "abstract":"", "journal":"", "issn": "", "received_date":"", "accepted_date":"", "pub_date":"", "doi":"", "pubmed":"", "num_co_authors":1,
-    "num_of_authors" : 1, "keywords": ""
-    }],
+    "title":"", 
+    "abstract":"", 
+    "journal":"", 
+    "issn": "", 
+    "received_date":"", 
+    "accepted_date":"", 
+    "pub_date":"", 
+    "doi":"", 
+    "pubmed":"", 
+    "num_co_authors":1,
+    "keywords": "",
     "co_authors" : [{
     "first_name":"", "middle_name":"", "last_name":"", "initials":"", "auth_gen_id":"", "af_place":"" , "orcid":"", "position" : 1,
     }],

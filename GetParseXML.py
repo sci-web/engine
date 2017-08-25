@@ -5,12 +5,12 @@ sys.setdefaultencoding('utf8')
 import re
 import os
 import xml.etree.ElementTree as etree
-from DataManager import DBcall, putLog
+from DataManager import DBcall
 from datetime import datetime
 from os import listdir
 from os.path import isfile, join
 import gzip
-import shutil
+# import shutil
 
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 gzips = [f for f in listdir(xmLpath) if isfile(join(xmLpath, f)) and f[-3:] == ".gz"]
@@ -30,19 +30,17 @@ for gz in sorted(gzips):
             try:
                 ff.write(f.read())
             except Exception, e:
-                print "failed to unpack " + gz
+                print "failed to unpack " + gz + "exception: " + e
                 continue
     data = {}
+    data["xml_source"] = gz    
     ca_list = []
     kw_list = []
     a_data = {}
-    p_data = {}
-    ca_data = {}
     n = 0   # line number to catch parcing/loading bugs
     print str(datetime.now())[:-7] + " : starting to load " + xmL
     for event, elem in etree.iterparse(xmL, events=('start', 'end', 'start-ns', 'end-ns')):
         childs = {"Year": "1000", "Month": "1", "Day": "1"}
-        memo = {}
         if event == 'start':
             date = ""
             for child in elem:
@@ -64,25 +62,27 @@ for gz in sorted(gzips):
 
             for k, v in names_p.iteritems():
                 if k == elem.tag:
-                    p_data[v] = elem.text
+                    data[v] = elem.text
             if elem.tag == "PubDate":
                 month = childs["Month"]
                 if not re.match("\d", month):
                     month = months[childs["Month"]]
                 date = datetime.strptime(childs["Year"] + "-" + str(month) + "-" + childs["Day"], "%Y-%m-%d")
-                p_data["pub_date"] = date
+                data["pub_date"] = date
 
             for k, v in elem.attrib.iteritems():
                 if k == "PubStatus":
                     date = datetime.strptime(childs["Year"] + "-" + childs["Month"] + "-" + childs["Day"], "%Y-%m-%d")
                 if k == "PubStatus" and v == "received":
-                    p_data["received_date"] = date
+                    data["received_date"] = date
                 if k == "PubStatus" and v == "accepted":
-                    p_data["accepted_date"] = date
+                    data["accepted_date"] = date
                 if k == "IdType" and v == "pubmed":
-                    p_data["pubmed"] = elem.text
+                    data["pubmed"] = ""
+                    if elem.text is not None:
+                        data["pubmed"] = int(elem.text)
                 if k == "IdType" and v == "doi":
-                    p_data["doi"] = elem.text
+                    data["doi"] = elem.text
                 if k == "Source" and v == "ORCID":
                     if re.search('http://orcid.org', elem.text):
                         a_data["orcid"] = elem.text
@@ -90,8 +90,7 @@ for gz in sorted(gzips):
                         a_data["orcid"] = 'http://orcid.org/' + elem.text
                     else:
                         a_data["orcid"] = 'http://orcid.org/' + elem.text[0:4] + "-" + elem.text[4:8] + "-" + elem.text[8:12] + "-" + elem.text[12:16]
-                p_data["num_of_authors"] = len(ca_list)
-                data["paper"] = p_data
+                data["num_of_authors"] = len(ca_list)
             if elem.tag == "Keyword":
                 kw_list.append(elem.text)
                 # print event, elem.tag, elem.attrib, '>', elem.text, '<', date  #, json
@@ -100,11 +99,9 @@ for gz in sorted(gzips):
             ca_list.append(a_data)
             a_data = {}
         if elem.tag == 'PubmedArticle' and event == 'end':
-            if len(ca_list) > 0:
-                data["author"] = ca_list[0]
-            ca_list = ca_list[1:]
-            data["coauthors"] = ca_list
+            data["authors"] = ca_list
             data["keywords"] = kw_list
+            data["xml_source"] = gz
             DBcall("papers", n).loadData([data])
             p_data = {}
             data = {}
