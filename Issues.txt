@@ -3,3 +3,35 @@ NCBI do not use Authors IDs, https://www.nlm.nih.gov/pubs/techbull/nd10/nd10_pm_
 two ways of author ORCID id record:
 <Identifier Source="ORCID">http://orcid.org/0000-0002-3175-9795</Identifier>
 <Identifier Source="ORCID">0000-0001-8487-647X</Identifier>
+
+2.
+Ghost papers example:
+> db.papers.findOne({"pubmed":6116957})
+{
+        "_id" : ObjectId("59a1323bf76d5b59a3ee26d1"),
+        "num_of_authors" : 0,
+        "title" : "Acyclovir.",
+        "journal" : "Lancet (London, England)",
+        "issn" : "0140-6736",
+        "pubmed" : 6116957,
+        "authors" : [ ],
+        "keywords" : [ ],
+        "pub_date" : ISODate("1981-10-17T00:00:00Z"),
+        "xml_source" : "medline17n0203.xml.gz"
+}
+> 
+> 
+> db.papers.findOne({"pubmed":6116959})
+{
+        "_id" : ObjectId("59a1323bf76d5b59a3ee26d3"),
+        "num_of_authors" : 0,
+        "title" : "Blood and sports.",
+        "journal" : "Lancet (London, England)",
+        "issn" : "0140-6736",
+        "pubmed" : 6116959,
+        "authors" : [ ],
+        "keywords" : [ ],
+        "pub_date" : ISODate("1981-10-17T00:00:00Z"),
+        "xml_source" : "medline17n0203.xml.gz"
+}
+db.papers.find({authors:[]}).count()

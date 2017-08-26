@@ -1,0 +1,1 @@
+db.papers.find({authors: {$elemMatch: {"last_name":"Ezaki", "initials":"H"}}},{pubmed:1,authors:1})

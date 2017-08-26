@@ -5,6 +5,7 @@ sys.setdefaultencoding('utf8')
 import networkx as nx
 from DataManager import DBcall
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 
 def idAuthor(papers, flds):
@@ -134,7 +135,7 @@ def main():
         adata_nums["meta"] = meta
         adata_nums["papers"] = adata[ adata.keys()[num] ]
         # print num, adata.keys()[num], adata[ adata.keys()[num] ]
-
+        # to link all co-authors with assigned id in the paper:
         for p in adata[ adata.keys()[num] ]:
             try:
                 a_to_pubs[p].append(adata_nums["assigned_id"])
@@ -161,14 +162,19 @@ def main():
 
     for node, weight in e_tuples.iteritems():
         n1, n2 = node
+        G.add_nodes_from(node)
         G.add_edge(n1, n2, weight=e_tuples[node])
-
+    print nx.connected_components(G)
+    print nx.degree(G)
+    nx.draw_shell(G)
+    # pos = nx.spring_layout(G)
+    # nx.draw_networkx_nodes(G, pos=pos, nodelist=G.nodes())
+    # nx.draw_networkx_edges(G, pos=pos, edgelist=G.edges())
+    plt.show()
     # print list(set(sp.keys()) - set(a_to_pubs.keys()))
     # for pp, au in a_to_pubs.iteritems():
     #     print pp, au
     print str(datetime.now())[:-7] + " : " + str(len(a_to_pubs.keys())) + " authors adding:"
-    G.add_nodes_from(adata.keys())
-
     print str(datetime.now())[:-7] + " : end linking"
 # def makeEdges(papers):
 #     for p in papers:
