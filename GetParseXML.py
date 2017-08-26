@@ -33,7 +33,6 @@ for gz in sorted(gzips):
                 print "failed to unpack " + gz + "exception: " + e
                 continue
     data = {}
-    data["xml_source"] = gz    
     ca_list = []
     kw_list = []
     a_data = {}
