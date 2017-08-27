@@ -254,7 +254,7 @@ def main():
         # for pp, au in a_to_pubs.iteritems():
         #     print pp, au
     print G.adjacency_list()
-    print enumerate(G.adjacency_list())
+    # print enumerate(G.adjacency_list())
     for node, adjacencies in enumerate(G.adjacency_list()):
         node_trace['marker']['color'].append(len(adjacencies))
         node_info = str(node) + ' # of connections: '+str(len(adjacencies))

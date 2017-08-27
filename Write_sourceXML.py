@@ -6,6 +6,7 @@ from os import listdir
 from os.path import isfile, join
 import gzip
 
+
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 gzips = [f for f in listdir(xmLpath) if isfile(join(xmLpath, f)) and f[-3:] == ".gz"]
 

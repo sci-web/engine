@@ -12,6 +12,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 # import shutil
 
+
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
 gzips = [f for f in listdir(xmLpath) if isfile(join(xmLpath, f)) and f[-3:] == ".gz"]
 

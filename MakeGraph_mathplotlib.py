@@ -98,8 +98,8 @@ def main():
     we might have got here a list of authors where some has different fields,
     but the same firs_name, last_name, initials:
     merge authors by longest metadata if they are met under the same name
-    (first, last name, initials) in the same paper list (i.e. name + affiliation):
-    metadata also can be written differently being visually the same, but in different encoding
+    (first, last name, initials) in the same paper list (name + affiliation):
+    the same metadata also can be RW differently being in different encoding
     """
     edges = []
     adata = dict(pubs_to_author)
@@ -166,8 +166,8 @@ def main():
         G.add_edge(n1, n2, weight=e_tuples[node])
     print "components: "
     print nx.connected_components(G)
-    print "degree: "
-    print nx.degree(G)
+    # print "degree: "
+    # print nx.degree(G)
     # draw with node ids:
     nx.draw_networkx(G)
     # pos = nx.spring_layout(G)
