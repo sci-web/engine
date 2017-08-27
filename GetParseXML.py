@@ -1,15 +1,15 @@
 # encoding=utf8
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 import re
 import os
 import xml.etree.ElementTree as etree
-from DataManager import DBcall
+from DataManager import DBcall, putLog
 from datetime import datetime
 from os import listdir
 from os.path import isfile, join
 import gzip
+reload(sys)
+sys.setdefaultencoding('utf8')
 # import shutil
 
 xmLpath = "./PubMed/ftp.ncbi.nlm.nih.gov/pubmed/baseline/"
@@ -40,7 +40,8 @@ for gz in sorted(gzips):
     print str(datetime.now())[:-7] + " : starting to load " + xmL
     for event, elem in etree.iterparse(xmL, events=('start', 'end', 'start-ns', 'end-ns')):
         childs = {"Year": "1000", "Month": "1", "Day": "1"}
-        if event == 'start':
+        # take fully populated event (i.e. event != start! )
+        if event == 'end':
             date = ""
             for child in elem:
                 if child.text:
@@ -68,21 +69,24 @@ for gz in sorted(gzips):
                     month = months[childs["Month"]]
                 date = datetime.strptime(childs["Year"] + "-" + str(month) + "-" + childs["Day"], "%Y-%m-%d")
                 data["pub_date"] = date
-
             for k, v in elem.attrib.iteritems():
                 if k == "PubStatus":
-                    date = datetime.strptime(childs["Year"] + "-" + childs["Month"] + "-" + childs["Day"], "%Y-%m-%d")
-                if k == "PubStatus" and v == "received":
-                    data["received_date"] = date
-                if k == "PubStatus" and v == "accepted":
-                    data["accepted_date"] = date
-                if k == "IdType" and v == "pubmed":
-                    data["pubmed"] = ""
+                    try:
+                        date = datetime.strptime(childs["Year"] + "-" + childs["Month"] + "-" + childs["Day"], "%Y-%m-%d")
+                    except:
+                        date = childs["Year"] + "-" + childs["Month"] + "-" + childs["Day"]
+                        putLog("Date format wrong for pubmed (pid = records number)", n, "XML parcing" + gz, "format")
+                    if v == "received":
+                        data["received_date"] = date
+                    if v == "accepted":
+                        data["accepted_date"] = date
+                if k == "IdType" and v == "pubmed" and elem.tag == "ArticleId":
+                    data["pubmed"] = 0
                     if elem.text is not None:
                         data["pubmed"] = int(elem.text)
-                if k == "IdType" and v == "doi":
+                if k == "IdType" and v == "doi" and elem.tag == "ArticleId":
                     data["doi"] = elem.text
-                if k == "Source" and v == "ORCID":
+                if k == "Source" and v == "ORCID" and elem.tag == "Identifier":
                     if re.search('http://orcid.org', elem.text):
                         a_data["orcid"] = elem.text
                     elif re.search('-', elem.text) and not re.search('http://orcid.org', elem.text):
@@ -106,7 +110,7 @@ for gz in sorted(gzips):
             data = {}
             ca_list = []
             kw_list = []
-        n += 1
+            n += 1
     nn += 1
     print str(datetime.now())[:-7] + " : finished loading " + str(nn) + "th " + xmL
     # with open(xmL, 'rb') as f_in, gzip.open(xmL + '.gz', 'wb') as f_out:

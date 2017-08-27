@@ -154,7 +154,7 @@ def main():
         for p in au["papers"]:
             all_a = a_to_pubs[p]
             for a in all_a:
-                if a != au:
+                if a != au["assigned_id"]:
                     try:
                         e_tuples[a, au["assigned_id"]] += 1
                     except:
