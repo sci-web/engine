@@ -132,7 +132,7 @@ def main():
     print str(datetime.now())[:-7] + " : extract data"
     keys = {"pubmed": {'$gt': 0}}
     # or findDatalistSorted(keys, "pubmed", 1).limit(1000)
-    papers = DBcall("papers", 0).findDatalist(keys).limit(100)
+    papers = DBcall("papers", 0).findDatalist(keys).limit(10)
     sp = {}
     pps = []
     for p in papers:
@@ -178,7 +178,7 @@ def main():
 
     e_tuples = MakeGraphData(a_to_pubs)
 
-    aus = len(e_tuples.keys())
+    aus = len(authors_w_p.keys())
     print str(datetime.now())[:-7] + " : " + str(aus) + " authors"
     print str(datetime.now())[:-7] + " : end linking"
 
@@ -207,7 +207,8 @@ def main():
             ncenter = n
             dmin = d
     # p = nx.single_source_shortest_path_length(G, ncenter)
-    print G.edges()
+    print G.nodes()
+    # print G.edges()
 
     edge_trace = Scatter(
         x=[],
@@ -217,7 +218,7 @@ def main():
         mode='lines')
 
     for edge in G.edges():
-        print edge
+        # print edge
         x0, y0 = G.node[edge[0]]['pos']
         x1, y1 = G.node[edge[1]]['pos']
         edge_trace['x'] += [x0, x1, None]
@@ -250,12 +251,15 @@ def main():
         x, y = G.node[node]['pos']
         node_trace['x'].append(x)
         node_trace['y'].append(y)
-        # print list(set(sp.keys()) - set(a_to_pubs.keys()))
-        # for pp, au in a_to_pubs.iteritems():
-        #     print pp, au
-    print G.adjacency_list()
+    print "Xs:" + str(len(node_trace['x'])) + " coord: " + str(node_trace['x'][4])
+    print "Ys:" + str(len(node_trace['y'])) + " coord: " + str(node_trace['y'][4])
+    # for gn in G.nodes():
+    #     print gn, G.neighbors(gn)
+    # >>> G.add_path([0,1,2,3])
+    # >>> [(n,nbrdict) for n,nbrdict in G.adjacency_iter()]
+    # [(0, {1: {}}), (1, {0: {}, 2: {}}), (2, {1: {}, 3: {}}), (3, {2: {}})]
     # print enumerate(G.adjacency_list())
-    for node, adjacencies in enumerate(G.adjacency_list()):
+    for node, adjacencies in G.adjacency_iter():
         node_trace['marker']['color'].append(len(adjacencies))
         node_info = str(node) + ' # of connections: '+str(len(adjacencies))
         node_trace['text'].append(node_info)
