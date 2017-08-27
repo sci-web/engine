@@ -22,7 +22,6 @@ class DBcall(object):
             except Exception, e:
                 action = "Load to DB failed: " + str(e)
                 putLog(action, self.pid, "DB load", "exception")
-        # self.client.insert_many(data)
 
     def updateData(self, keys, values):
         try:
