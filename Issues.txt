@@ -35,3 +35,97 @@ Ghost papers example:
         "xml_source" : "medline17n0203.xml.gz"
 }
 db.papers.find({authors:[]}).count()
+
+3.
+Some dates don't correspond to date format, i.e. "2011-04-31", "2010-06-31" etc (There is no 31 of April or June etc)
+
+4. Country doesn't correspond affiliation:
+> db.papers.findOne({pubmed:3374479},{})
+{
+        "_id" : ObjectId("59a0bb37f76d5b59a3c463ce"),
+        "num_of_authors" : 3,
+        "title" : "Differential phosphorylation of microtubule proteins by ATP and GTP.",
+        "journal" : "Molecular and cellular biochemistry",
+        "issn" : "0300-8177",
+        "pubmed" : 3374479,
+        "authors" : [
+                {
+                        "first_name" : "J",
+                        "last_name" : "Diaz-Nido",
+                        "af_place" : "Centro de Biología Molecular (CSIC-UAM), Universidad Autónoma, Madrid, Spain.",
+                        "af_country" : "Netherlands",
+                        "position" : 1,
+                        "initials" : "J"
+                },
+                {
+                        "position" : 2,
+                        "first_name" : "L",
+                        "last_name" : "Serrano",
+                        "initials" : "L"
+                },
+                {
+                        "position" : 3,
+                        "first_name" : "J",
+                        "last_name" : "Avila",
+                        "initials" : "J"
+                }
+        ],
+        "keywords" : [ ],
+        "pub_date" : ISODate("1988-01-01T00:00:00Z"),
+        "abstract" : "Purified brain microtubule protein is phosphorylated by endogenous protein kinase activities in the presence of [gamma-32P] ATP or [gamma-32P] GTP. Here we show that certain microtubule-associated proteins are phosphorylated differently by GTP or ATP as direct phosphoryl donors, suggesting the presence of distinct kinase activities, with different specificities, associated with microtubule protein.",
+        "xml_source" : "medline17n0112.xml.gz"
+}
+> 
+> 
+> 
+> 
+> 
+> db.papers.findOne({pubmed:3292238},{})
+{
+        "_id" : ObjectId("59a0b762f76d5b59a3c322a3"),
+        "num_of_authors" : 5,
+        "title" : "Conformational alterations detected by circular dichroism induced in the normal ras p21 protein by activating point mutations at position 12, 59, or 61.",
+        "journal" : "European journal of biochemistry",
+        "issn" : "0014-2956",
+        "pubmed" : 3292238,
+        "authors" : [
+                {
+                        "first_name" : "A",
+                        "last_name" : "Valencia",
+                        "af_place" : "Instituto de Investigaciones Biomédicas, Facultad de Medicina, Universidad Autónoma, Madrid, Spain.",
+                        "af_country" : "England",
+                        "position" : 1,
+                        "initials" : "A"
+                },
+                {
+                        "position" : 2,
+                        "first_name" : "L",
+                        "last_name" : "Serrano",
+                        "initials" : "L"
+                },
+                {
+                        "position" : 3,
+                        "first_name" : "R",
+                        "last_name" : "Caballero",
+                        "initials" : "R"
+                },
+                {
+                        "position" : 4,
+                        "first_name" : "P S",
+                        "last_name" : "Anderson",
+                        "initials" : "PS"
+                },
+                {
+                        "position" : 5,
+                        "first_name" : "J C",
+                        "last_name" : "Lacal",
+                        "initials" : "JC"
+                }
+        ],
+        "keywords" : [ ],
+        "pub_date" : ISODate("1988-07-01T00:00:00Z"),
+        "abstract" : "Activation of the oncogenic potential of ras oncogenes occurs by point mutations at codons 12, 13, 59, 61, and 63 of the sequences that codify for its product, a 21-kDa protein designated as p21. This activation has been postulated by computer models as modifiers of the structure of the protein, which may alter its biochemical and biological activities. We have expressed in bacteria the normal ras p21 and five mutated p21 proteins with mutations at positions 12, 59, 61, 12 plus 59, and 12 plus 61. Purification was carried out by solubilization from bacterial pellets in 7 M urea and chromatography through a Sephadex G-100 column to obtain greater than 95% purified proteins. Circular dichroic (CD) spectra showed that the normal protein and that activated by substitution of Ala59 to Thr59 are very similar in their overall structure. By contrast, point mutations affecting either 12 or 61 residues substantially altered the structure of the proteins. When the parameters of Chen et al. [Biochemistry II, 4120-4131 (1972)] were applied to the CD spectra, both normal and thr59-mutated ras proteins showed a less organized structure than mutated proteins at position 12 or 61. Since the Thr59 mutant has more similar transforming activity than other activated proteins, but a GTPase activity similar to that of the normal protein, our results support the hypothesis that there is more than one mechanism of activation of the ras p21 protein. One of these mechanisms involves important structural alterations by point mutations at position 12 or 61 which reduce the GTPase activity of the protein. Another mechanism will be that induced by a substitution of Ala59 to Thr59 which does not substantially alter the protein conformation. A putative alternative mechanism for the activation of this mutant is discussed.",
+        "xml_source" : "medline17n0109.xml.gz"
+}
+
+→ also, can be used for euristical author identification
